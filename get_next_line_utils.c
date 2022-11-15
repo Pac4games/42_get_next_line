@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: paugonca <paugonca@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/05 17:00:48 by paugonca          #+#    #+#             */
-/*   Updated: 2022/11/07 15:34:20 by paugonca         ###   ########.fr       */
+/*   Created: 2022/11/15 15:31:18 by paugonca          #+#    #+#             */
+/*   Updated: 2022/11/15 15:44:04 by paugonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,38 +14,28 @@
 
 size_t	ft_strlen(const char *s)
 {
-	size_t	p;
+	int	p;
 
+	if (!s)
+		return (0);
 	p = 0;
 	while (s[p])
 		p++;
 	return (p);
 }
 
-void	*ft_memcpy(void *dst, const void *src, size_t len)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	p;
+	char	*res;
+	int		p;
 
+	res = (char *)s;
 	p = 0;
-	if (dst == src || len == 0)
-		return (dst);
-	while (p < len)
-	{
-		((char *)dst)[p] = ((const char *)src)[p];
+	while (res[p] && res[p] != c)
 		p++;
-	}
-	return (dst);
-}
-
-char	*ft_strdup(const char *str)
-{
-	char	*dst;
-
-	dst = (char *)malloc((sizeof(char)) * (ft_strlen(str) + 1));
-	if (!dst)
-		return (0);
-	ft_memcpy(dst, str, ft_strlen(str) + 1);
-	return (dst);
+	if (res[p] == c)
+		return (&res[p]);
+	return (0);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
@@ -70,16 +60,25 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (res);
 }
 
-char	*ft_strchr(const char *s, int c)
+void	ft_bzero(void *b, size_t len)
 {
-	char	*res;
-	int		p;
+	size_t	p;
 
-	res = (char *)s;
 	p = 0;
-	while (res[p] && res[p] != c)
+	while (p < len)
+	{
+		((unsigned char *)b)[p] = 0;
 		p++;
-	if (res[p] == c)
-		return (&res[p]);
-	return (0);
+	}
+}
+
+void	*ft_calloc(size_t number, size_t size)
+{
+	void	*ptr;
+
+	ptr = malloc(number * size);
+	if (!ptr)
+		return (0);
+	ft_bzero(ptr, number * size);
+	return (ptr);
 }
