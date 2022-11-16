@@ -6,7 +6,7 @@
 /*   By: paugonca <paugonca@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 15:45:54 by paugonca          #+#    #+#             */
-/*   Updated: 2022/11/15 16:46:45 by paugonca         ###   ########.fr       */
+/*   Updated: 2022/11/16 15:27:14 by paugonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static char	*read_log(char *log)
 {
-	char	str;
+	char	*str;
 	int		p;
 
 	if (!log)
@@ -23,7 +23,7 @@ static char	*read_log(char *log)
 	while (log[p] && log[p] != '\n')
 		p++;
 	str = ft_calloc(p + 2, 1);
-	if (!res)
+	if (!str)
 		return (NULL);
 	p = 0;
 	while (log[p] && log[p] != '\n')
@@ -36,12 +36,38 @@ static char	*read_log(char *log)
 	return (str);
 }
 
+static char	*read_line(int fd, char *log)
+{
+	char	*buf;
+	int		line;
+
+	line = 1;
+	buf = malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (NULL);
+	while (line > 0 && !ft_strchr(log, '\n'))
+	{
+		line = read(fd, buf, BUFFER_SIZE);
+		if (line < 0)
+		{
+			if (log && ft_strchr(log, '\0'))
+				free(log);
+			free(buf);
+			return (NULL);
+		}
+		buf[line] = 0;
+		log = ft_strjoin(log, buf);
+	}
+	free(buf);
+	return (log);
+}
+
 static char	*update_log(char *log)
 {
 	char	*res;
 	int		p;
 	int		i;
-	
+
 	p = 0;
 	i = 0;
 	while (log[p] && log[p] != '\n')
@@ -55,7 +81,7 @@ static char	*update_log(char *log)
 	p++;
 	while (log[p])
 	{
-		res[i] = log[p]
+		res[i] = log[p];
 		p++;
 		i++;
 	}
@@ -69,11 +95,17 @@ char	*get_next_line(int fd)
 	static char	*log;
 	char		*res;
 
-	if ((fd < 0 && fd > 1024) || BUFFER_SIZE <= 1)
+	if (BUFFER_SIZE <= 1)
 		return (NULL);
 	if (log && ft_strchr(log, '\n'))
 	{
 		res = read_log(log);
 		log = update_log(log);
 	}
+	log = read_line(fd, log);
+	if (!log)
+		return (NULL);
+	res = read_log(log);
+	log = update_log(log);
+	return (res);
 }

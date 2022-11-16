@@ -6,7 +6,7 @@
 /*   By: paugonca <paugonca@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/05 17:02:12 by paugonca          #+#    #+#             */
-/*   Updated: 2022/11/15 15:25:08 by paugonca         ###   ########.fr       */
+/*   Updated: 2022/11/16 15:47:45 by paugonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 //get_next_line.c
 char	*get_next_line(int fd);
 //get_next_line_utils.c
-size_t	ft_strlen(const char *s);
-void	*ft_memcpy(void *dst, const void *src, size_t len);
-char	*ft_strdup(const char *str);
-char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_strjoin(char *s1, char *s2);
+size_t	ft_strlen(const char *str);
 char	*ft_strchr(const char *s, int c);
+void	ft_bzero(void *s, size_t n);
+void	*ft_calloc(size_t count, size_t size);
 
 #endif
