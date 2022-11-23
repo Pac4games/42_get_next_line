@@ -5,93 +5,70 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: paugonca <paugonca@student.42lisboa.com>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 15:28:47 by paugonca          #+#    #+#             */
-/*   Updated: 2022/11/16 15:33:16 by paugonca         ###   ########.fr       */
+/*   Created: 2022/11/16 16:09:32 by paugonca          #+#    #+#             */
+/*   Updated: 2022/11/16 16:56:22 by paugonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+//Adaptated version for get_next_line()
 size_t	ft_strlen(const char *str)
 {
-	int	p;
+	size_t	p;
 
+	p = 0;
 	if (!str)
 		return (0);
-	p = 0;
-	while (str[p])
+	while (str[p] && str[p] != '\n')
+		p++;
+	if (str[p] == '\n')
 		p++;
 	return (p);
 }
 
+//Another adaptaded version for get_next_line()
 char	*ft_strjoin(char *s1, char *s2)
 {
 	char	*res;
-	int		i;
-	int		j;
+	int		p;
 
-	i = -1;
-	j = 0;
-	if (s2 && !s1)
-	{
-		s1 = (char *)malloc(1);
-		s1[0] = '\0';
-	}
-	if (!s1 || !s2)
-		return (NULL);
+	p = 0;
 	res = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
 	if (!res)
 		return (NULL);
-	while (s1[++i])
-		res[i] = s1[i];
-	while (s2[j])
-		res[i++] = s2[j++];
-	res[i] = '\0';
-	free (s1);
+	while (s1 && s1[p])
+	{
+		res[p] = s1[p];
+		p++;
+	}
+	free(s1);
+	while (*s2)
+	{
+		res[p++] = *s2;
+		if (*s2++ == '\n')
+			break ;
+	}
+	res[p] = '\0';
 	return (res);
 }
 
-char	*ft_strchr(const char *s, int c)
+int	clean_buf(char *buf)
 {
-	unsigned char	p;
+	int	p;
+	int	i;
+	int	nline;
 
-	p = c;
-	if (!s)
-		return (NULL);
-	while (*s)
-	{
-		if (*s == (char)p)
-			return ((char *)s);
-		s++;
-	}
-	if (p == '\0')
-		return ((char *)s);
-	return (NULL);
-}
-
-void	*ft_calloc(size_t count, size_t size)
-{
-	void	*ptr;
-
-	ptr = malloc(count * size);
-	if (!ptr)
-		return (NULL);
-	ft_bzero(ptr, (count * size));
-	return (ptr);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	char	*str;
-	size_t	i;
-
-	if (n == 0)
-		return ;
-	str = s;
+	p = 0;
 	i = 0;
-	while (i < n)
+	nline = 0;
+	while (buf[p])
 	{
-		str[i] = 0;
-		i++;
+		if (nline)
+			buf[i++] = buf[p];
+		if (buf[p] == '\n')
+			nline = 1;
+		buf[p++] = '\0';
 	}
+	return (nline);
 }
